@@ -24,5 +24,5 @@ exports.parse = async (req, res) => {
     },
   });
   const data = await getResponseData(response);
-  res.status(200).send(data);
+  res.json(data);
 };
