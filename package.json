@@ -1,0 +1,27 @@
+{
+  "name": "@chickaree/parser",
+  "version": "1.0.0",
+  "description": "Chickaree Parser",
+  "main": "index.js",
+  "scripts": {
+    "start": "functions-framework --target=parse",
+    "deploy": "gcloud functions deploy parser --region=us-east1",
+    "test": "eslint --ignore-path .gitignore ."
+  },
+  "license": "AGPL-3.0-or-later",
+  "dependencies": {
+    "@chickaree/web": "^1.0.6",
+    "base64url": "^3.0.1",
+    "jsdom": "^16.2.2",
+    "node-fetch": "^2.6.0"
+  },
+  "devDependencies": {
+    "@google-cloud/functions-framework": "^1.5.1",
+    "eslint": "^6.8.0",
+    "eslint-config-airbnb": "^18.1.0",
+    "eslint-plugin-import": "^2.20.2",
+    "eslint-plugin-jsx-a11y": "^6.2.3",
+    "eslint-plugin-react": "^7.19.0",
+    "eslint-plugin-react-hooks": "^2.5.0"
+  }
+}
