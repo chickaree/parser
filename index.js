@@ -26,3 +26,5 @@ exports.parse = async (req, res) => {
   const data = await getResponseData(response);
   res.json(data);
 };
+
+// @TODO add a `gcp-build` script to package.json and package the whole thing in webpack?
