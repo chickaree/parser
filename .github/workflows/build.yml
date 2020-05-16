@@ -1,0 +1,22 @@
+name: Test & Build
+
+on: [push]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v1
+    - uses: actions/setup-node@v1
+    - run: echo "//npm.pkg.github.com/:_authToken=${{ secrets.GITHUB_TOKEN }}" > ~/.npmrc
+    - run: npm ci
+    - run: npm run build --if-present
+    - run: npm test
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - run: docker build --tag docker.pkg.github.com/chickaree/parser/parser:${GITHUB_REF} --build-arg GITHUB_TOKEN=${{ secrets.GITHUB_TOKEN }} .
+      - run: docker login https://docker.pkg.github.com -u chickaree --password ${{ secrets.GITHUB_TOKEN }}
+      - run: docker push docker.pkg.github.com/chickaree/parser/parser:latest
+
