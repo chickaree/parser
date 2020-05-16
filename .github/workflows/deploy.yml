@@ -1,9 +1,8 @@
 name: Deploy
 
 on:
-  push:
-    branches:
-      - 'master'
+  release:
+    types: [created]
 
 jobs:
   deploy:
@@ -12,17 +11,7 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
-    - uses: actions/setup-node@v1
-      with:
-        node-version: '10.x'
-    - run: echo "//npm.pkg.github.com/:_authToken=${{ secrets.GITHUB_TOKEN }}" > ~/.npmrc
-    - run: npm ci
-    - run: npm run build --if-present
-    - run: npm test
-    - name: Setup gcloud environment
-      uses: GoogleCloudPlatform/github-actions@master
-      with:
-        service_account_key: ${{ secrets.GCP_SA_KEY }}
-        project_id: ${{ secrets.GCP_PROJECT }}
-    - run: gcloud functions deploy parser --region=us-east1
+    - run: docker build --tag parser:${GITHUB_REF} --tag parser:latest --build-arg GITHUB_TOKEN=${{ secrets.GITHUB_TOKEN }} .
+    - run: docker login https://docker.pkg.github.com -u chickaree --password ${{ secrets.GITHUB_TOKEN }}
+    - run: docker push parser:latest
 

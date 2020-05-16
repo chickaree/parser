@@ -1,4 +1,5 @@
 const { getResponseData } = require('@chickaree/web');
+const { buffer, send } = require('micro');
 const { decode } = require('base64url');
 const fetch = require('node-fetch');
 const jsdom = require('jsdom');
@@ -12,19 +13,19 @@ global.DOMParser = window.DOMParser;
 global.HTMLDocument = window.HTMLDocument;
 global.XMLDocument = window.XMLDocument;
 
-const pos = '/parser/'.length;
-
-exports.parse = async (req, res) => {
-  const [domain, hash] = req.url.substring(pos).split('/');
+module.exports = async (req, res) => {
+  if (req.method !== 'POST') {
+    return send(res, 405);
+  }
+  const [domain, hash] = req.url.substring(1).split('/');
   const url = new URL(hash ? decode(hash) : '', `https://${domain}/`);
-  const response = new Response(req.body, {
+
+  const response = new Response(await buffer(req), {
     url: url.toString(),
     headers: {
-      'Content-Type': req.header('Content-Type'),
+      'Content-Type': req.headers['content-type'],
     },
   });
-  const data = await getResponseData(response);
-  res.json(data);
-};
 
-// @TODO add a `gcp-build` script to package.json and package the whole thing in webpack?
+  return getResponseData(response);
+};
