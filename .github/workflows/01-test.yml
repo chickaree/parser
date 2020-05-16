@@ -2,9 +2,11 @@ name: Test
 
 on:
   push:
+    tags-ignore:
+      - '*'
 
 jobs:
-  build:
+  test:
 
     runs-on: ubuntu-latest
 
