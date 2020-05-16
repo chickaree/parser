@@ -11,7 +11,7 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
-    - run: docker build --tag parser:${GITHUB_REF} --tag parser:latest --build-arg GITHUB_TOKEN=${{ secrets.GITHUB_TOKEN }} .
+    - run: docker build --tag docker.pkg.github.com/chickaree/parser/parser:${GITHUB_REF} --tag docker.pkg.github.com/chickaree/parser/parser:latest --build-arg GITHUB_TOKEN=${{ secrets.GITHUB_TOKEN }} .
     - run: docker login https://docker.pkg.github.com -u chickaree --password ${{ secrets.GITHUB_TOKEN }}
-    - run: docker push parser:latest
+    - run: docker push docker.pkg.github.com/chickaree/parser/parser:latest
 
