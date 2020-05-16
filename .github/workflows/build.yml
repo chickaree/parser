@@ -23,8 +23,10 @@ jobs:
         with:
           service_account_key: ${{ secrets.GCP_SA_KEY }}
           project_id: ${{ secrets.GCP_PROJECT }}
-      - run: docker build --tag gcr.io/${{ secrets.GCP_PROJECT }}/parser --tag docker.pkg.github.com/${GITHUB_REPOSITORY}/parser --build-arg GITHUB_TOKEN=${{ secrets.GITHUB_TOKEN }} .
+      - run: docker build --tag docker.pkg.github.com/${GITHUB_REPOSITORY}/parser --tag gcr.io/${{ secrets.GCP_PROJECT }}/parser --build-arg GITHUB_TOKEN=${{ secrets.GITHUB_TOKEN }} .
       - run: docker login https://docker.pkg.github.com -u chickaree --password ${{ secrets.GITHUB_TOKEN }}
       - run: docker push docker.pkg.github.com/${GITHUB_REPOSITORY}/parser
-      - run: gcloud run deploy --image docker.pkg.github.com/${GITHUB_REPOSITORY}/parser --platform managed --region us-east1 --allow-unauthenticated
+      - run: gcloud auth configure-docker
+      - run: docker push gcr.io/${{ secrets.GCP_PROJECT }}/parser
+      - run: gcloud run deploy --image gcr.io/${{ secrets.GCP_PROJECT }}/parser parser
 
